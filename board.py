@@ -40,9 +40,10 @@ class Board:
     
     def __str__(self):
         """ Prints the state of the board """
-        s = []
+        s = ["-"*(self.dim[0]+2)+"\n"]
         uncovered = [(a[0],a[1]) for a in self.uncovered]
         for j in range(self.dim[1]-1,-1,-1):
+            s.append('|')
             for i in range(self.dim[0]):
                 if (i,j) in self.mined:
                     s.append("X")
@@ -56,7 +57,8 @@ class Board:
                         s.append(str(self.uncovered[a][2]))
                 else:
                     s.append("+")
-            s.append("\n")
+            s.append("|\n")
+        s.append("-"*(self.dim[0]+2)+"\n")
         if self.finished and self.lost:
             s.append("GAME LOST\n")
         elif self.finished:

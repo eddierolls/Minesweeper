@@ -18,7 +18,7 @@ class Game:
         print(self.board)
         while not self.board.finished:
             out = self.makeMove()
-            if out == -1: return -1
+            if out == 1: break
             print(self.board)
             
             
