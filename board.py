@@ -4,9 +4,6 @@ Created on Thu Dec 31 15:29:35 2020
 
 @author: edwar
 
-TODO:
-    * Implement placing a mine (make sure that it hasn't been guessed)
-    * Create a game object (probably seperate file)
 """
 import random
 
