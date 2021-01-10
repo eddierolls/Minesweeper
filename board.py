@@ -10,38 +10,51 @@ import random
 class Board:
     """ The board on which the game is played"""
     
-    def __init__(self,x=10,y=10,m=10,x0=0,y0=0):
-        """ setup a board of size x by y, with m mines and initial guess (x0,y0) """
-        if x<0 or y<0 or x*y<=m:
-            raise ValueError("Invalid board dimensions")
-        
-        self.dim = (x,y)
-        self.allSquares = set([(a,b) for a in range(x) for b in range(y)])
-        self.uncovered = [] # Tuples (i,j,n) for the square (i,j) and the number of adjacent mines n
-        self.mined = set()
-        self.mines = self.__setupBoard__(m,x0,y0)
+    def __init__(self,params=None):
         self.finished = False
         self.lost = False
-        self.guessSquare(x0,y0)
+        self.uncovered = [] # Tuples (i,j,n) for the square (i,j) and the number of adjacent mines n
+        self.mined = set()
+        
+        if params: # Else we manually define a board
+            x,y,m,x0,y0 = params
+            """ setup a board of size x by y, with m mines and initial guess (x0,y0) """
+            if x<0 or y<0 or x*y<=m:
+                raise ValueError("Invalid board dimensions")
+            
+            self.dim = (x,y)
+            self.allSquares = set([(a,b) for a in range(x) for b in range(y)])
+            self.mines = self.__setupBoard__(m,x0,y0)
+            self.guessSquare(x0,y0)
     
     def __setupBoard__(self,m,x0,y0):
         """ Sets up the board """
         x,y = self.dim
         mines = random.sample(range(x*y),m+1)
-        mines = [(m//x,m%y) for m in sorted(mines)]
+        mines = [(m%x,m//y) for m in sorted(mines)]
         if (x0,y0) in mines:
             mines.remove((x0,y0))
         else:
             mines = mines[:m]
         return set(mines)
     
+    def setupBoardFromTuple(self,boardData):
+        x,y,fullBoard = boardData # An (x,y) sized board with the board defined as a string of X and 0 defined columnwise
+        if not isinstance(fullBoard,str) or ((fullBoard.count("X")+fullBoard.count("O"))!=x*y):
+            raise TypeError("Invalid board type")
+        elif x<0 or y<0:
+            raise ValueError("Invalid board dimensions")
+        self.dim = (x,y)
+        self.allSquares = set([(a,b) for a in range(x) for b in range(y)])
+        self.mines = set([(i%x,i//x) for i in range(x*y) if fullBoard[i]=="X"])
+    
     def __str__(self):
         """ Prints the state of the board """
-        s = ["-"*(self.dim[0]+2)+"\n"]
+        s = ["-"*(self.dim[1]+2)+"\n"]
         uncovered = [(a[0],a[1]) for a in self.uncovered]
-        for j in range(self.dim[1]-1,-1,-1):
+        for i in range(self.dim[0]):
             s.append('|')
-            for i in range(self.dim[0]):
+            for j in range(self.dim[1]):
                 if (i,j) in self.mined:
                     s.append("X")
                 elif (i,j) in uncovered and (i,j) in self.mines:
@@ -55,7 +68,7 @@ class Board:
                 else:
                     s.append("+")
             s.append("|\n")
-        s.append("-"*(self.dim[0]+2)+"\n")
+        s.append("-"*(self.dim[1]+2)+"\n")
         if self.finished and self.lost:
             s.append("GAME LOST\n")
         elif self.finished:
@@ -77,7 +90,7 @@ class Board:
             return 4 # Game lost
         
         adjacent = [(x,y) for x in range(x0-1,x0+2) for y in range(y0-1,y0+2)
-                    if (y>=0 and x>=0 and x<self.dim[1] and y<self.dim[1] and not (x==x0 and y==y0))]
+                    if (y>=0 and x>=0 and x<self.dim[0] and y<self.dim[1] and not (x==x0 and y==y0))]
         totalMines = len([a for a in adjacent if a in self.mines])
         self.uncovered.append((x0,y0,totalMines))
         if totalMines == 0:

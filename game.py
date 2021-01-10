@@ -24,18 +24,17 @@ class Game:
             print(self.board)
     
     def initialiseBoard(self,params):
-        if params==None: # Human game
+        if params==None: # Human game, need to get dimensions from the player
             self.board = self.setupBoard()
             print(self.board)
-        else: # AI
-            x,y,m,x0,y0 = params
-            self.board = board.Board(x,y,m,x0,y0)
+        else: # AI, board dimensions defined
+            self.board = board.Board(params)
     
     def setupBoard(self):
         x,y = util.parsePair("Select board dimensions as two numbers separated by a space:")
         m = int(input("How many mines should there be?\n"))
         x0,y0 = util.parsePair("What is your initial guess?")
-        bd = board.Board(x,y,m,x0,y0)
+        bd = board.Board((x,y,m,x0,y0))
         return bd
     
 if __name__ == "__main__":
