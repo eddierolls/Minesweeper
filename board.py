@@ -115,4 +115,4 @@ class Board:
         else:
             self.mined.add((x0,y0))
         
-        return 0 # Already mined
+        return 0

@@ -41,3 +41,4 @@ class Player:
         elif out==3: print("That square has a mine on it, please select mine to undo this")
         elif out==4: print("Commiserations, you have lost!")
         elif out==5: print("Congratulations, you have won!")
+        return out
