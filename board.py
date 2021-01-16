@@ -116,3 +116,7 @@ class Board:
             self.mined.add((x0,y0))
         
         return 0
+
+    def findValidModes(self):
+        return self.allSquares - set([(a[0],a[1]) for a in self.uncovered])
+        

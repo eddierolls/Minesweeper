@@ -10,6 +10,7 @@ TODO:
 import board
 import player
 import minefieldUtility as util
+import sys
 
 class Game:
     """ An instance of a game which sets up a board and controls I/O """
@@ -38,4 +39,10 @@ class Game:
         return bd
     
 if __name__ == "__main__":
-    g = Game()
+    if len(sys.argv)==1:
+        g = Game()
+    elif len(sys.argv)==2:
+        g = Game(user=sys.argv[1])
+    else:
+        IOError("Expected a maximum of one command line argument")
+    

@@ -54,6 +54,11 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(bd.guessSquare(0,0),3) # Mine already there
         bd.placeMine(0,0)
         self.assertEqual(bd.guessSquare(0,0),4) # Loss
+    
+    def testFindValidModes(self):
+        bd = board.Board((2,2,1,0,0))
+        validMoves = bd.findValidModes()
+        self.assertEqual(validMoves,set([(0,1),(1,1),(1,0)]))
 
 if __name__ == '__main__':
     unittest.main()

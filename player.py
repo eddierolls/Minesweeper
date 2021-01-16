@@ -6,17 +6,19 @@ Created on Sat Jan  9 17:01:32 2021
 """
 
 import minefieldUtility as util
+import random
 
 class Player:
     
     def __init__(self,playerType,bd):
-        if playerType not in ["human"]:
+        if playerType not in ["human" "random"]:
             TypeError("playerType not recognised")
         self.playerType = playerType
         self.board = bd
     
     def makeMove(self):
-        if self.playerType=="human": out = self.humanMove()
+        fn = getattr(self,self.playerType+"Move")
+        out = fn()
         return out
         
     def humanMove(self):
@@ -41,4 +43,10 @@ class Player:
         elif out==3: print("That square has a mine on it, please select mine to undo this")
         elif out==4: print("Commiserations, you have lost!")
         elif out==5: print("Congratulations, you have won!")
+        return out
+    
+    def randomMove(self):
+        validMoves = self.board.findValidModes()
+        move = random.choice(tuple(validMoves))
+        out = self.board.guessSquare(move[0],move[1])
         return out
