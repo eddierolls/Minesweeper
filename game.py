@@ -15,19 +15,25 @@ import sys
 class Game:
     """ An instance of a game which sets up a board and controls I/O """
     
-    def __init__(self,params=None,user="human"):
+    def __init__(self,params=None,user="human",printToScreen=True):
         """ Currently where the game is played """
+        self.printToScreen = printToScreen
         self.initialiseBoard(params)
-        user = player.Player(user,self.board)
+        self.player = player.Player(user,self.board)
+    
+    def playGame(self):
         while not self.board.finished:
-            out = user.makeMove()
-            if out == 1: break
-            print(self.board)
+            out = self.player.makeMove()
+            if out == -1: return -1
+            if self.printToScreen:
+                printMessage(out)
+                print(self.board)
+        return 1-self.board.lost
     
     def initialiseBoard(self,params):
         if params==None: # Human game, need to get dimensions from the player
             self.board = self.setupBoard()
-            print(self.board)
+            if self.printToScreen: print(self.board)
         else: # AI, board dimensions defined
             self.board = board.Board(params)
     
@@ -37,6 +43,15 @@ class Game:
         x0,y0 = util.parsePair("What is your initial guess?")
         bd = board.Board((x,y,m,x0,y0))
         return bd
+
+    
+        
+def printMessage(out):
+    if out==1:   print("That square is not on the board")
+    elif out==2: print("That square has already been uncovered")
+    elif out==3: print("That square has a mine on it, please select mine to undo this")
+    elif out==4: print("Commiserations, you have lost!")
+    elif out==5: print("Congratulations, you have won!")
     
 if __name__ == "__main__":
     if len(sys.argv)==1:
@@ -45,4 +60,4 @@ if __name__ == "__main__":
         g = Game(user=sys.argv[1])
     else:
         IOError("Expected a maximum of one command line argument")
-    
+    g.playGame()

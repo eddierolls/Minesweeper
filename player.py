@@ -26,7 +26,7 @@ class Player:
         while not valid:
             moveType = input("Would you like to place a mine (M), make a guess (G) or quit (Q)\n").upper()
             if moveType == "Q":
-                return 1
+                return -1
             elif moveType not in ("G","M"):
                 print("Sorry, that wasn't recognised, please try again.")
             else:
@@ -38,11 +38,6 @@ class Player:
         else:
             out = self.board.placeMine(x0,y0)
         
-        if out==1:   print("That square is not on the board")
-        elif out==2: print("That square has already been uncovered")
-        elif out==3: print("That square has a mine on it, please select mine to undo this")
-        elif out==4: print("Commiserations, you have lost!")
-        elif out==5: print("Congratulations, you have won!")
         return out
     
     def randomMove(self):
