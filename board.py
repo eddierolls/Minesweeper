@@ -119,4 +119,22 @@ class Board:
 
     def findValidModes(self):
         return self.allSquares - set([(a[0],a[1]) for a in self.uncovered])
-        
+    
+    def save(self,filePtr):
+        strMoves = [" ".join(map(str,self.dim))," "]
+        strBoard = [" "]
+        uncovered = [(a[0],a[1]) for a in self.uncovered]
+        for i in range(self.dim[0]):
+            for j in range(self.dim[1]):
+                if (i,j) in uncovered and (i,j) in self.mines:
+                    strMoves.append("M")
+                elif (i,j) in uncovered:
+                    a = uncovered.index((i,j))
+                    strMoves.append(str(self.uncovered[a][2]))
+                else:
+                    strMoves.append("+")
+                if (i,j) in self.mines:
+                    strBoard.append("X")
+                else:
+                    strBoard.append("O")
+        filePtr.write("".join(strMoves)+"".join(strBoard)+"\n")

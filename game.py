@@ -15,19 +15,24 @@ import sys
 class Game:
     """ An instance of a game which sets up a board and controls I/O """
     
-    def __init__(self,params=None,user="human",printToScreen=True):
+    def __init__(self,params=None,user="human",printToScreen=True,saveLoc=None):
         """ Currently where the game is played """
         self.printToScreen = printToScreen
         self.initialiseBoard(params)
         self.player = player.Player(user,self.board)
+        self.saveLoc = saveLoc
     
     def playGame(self):
+        if self.saveLoc:
+            f = open(self.saveLoc,"a")
+            self.board.save(f)
         while not self.board.finished:
             out = self.player.makeMove()
             if out == -1: return -1
             if self.printToScreen:
                 printMessage(out)
                 print(self.board)
+            if self.saveLoc: self.board.save(f)
         return 1-self.board.lost
     
     def initialiseBoard(self,params):
